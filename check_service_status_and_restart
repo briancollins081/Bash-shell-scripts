@@ -1,0 +1,13 @@
+#!/bin/bash
+echo "**********************************"
+echo "**STARTING SERVICE CHECK SERVICE**"
+echo "**********************************"
+
+echo "Enter the name of the service you want to check: "
+read SERVICE_NAME
+
+echo "****************************************"
+echo "** CHECKING STATUS FOR SERVICE: $SERVICE_NAME **"
+echo "****************************************"
+
+
