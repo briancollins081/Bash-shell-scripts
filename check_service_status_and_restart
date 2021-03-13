@@ -6,8 +6,24 @@ echo "**********************************"
 echo "Enter the name of the service you want to check: "
 read SERVICE_NAME
 
-echo "****************************************"
+echo "************************************************"
 echo "** CHECKING STATUS FOR SERVICE: $SERVICE_NAME **"
-echo "****************************************"
+echo "************************************************"
+
+if systemctl status $SERVICE_NAME | grep active | grep '(running)'
+then
+	echo "$SERVICE_NAME IS RUNNING"
+else
+  	echo "$SERVICE_NAME IS NOT RUNNING"
+	echo "******************************************"
+	echo "** ATTEMPTING TO RESTART WITH SYSTEMCTL **"
+	echo "******************************************"
+	systemctl restart $SERVICE_NAME
+
+	if systemctl status $SERVICE_NAME | grep active | grep '(running)'
+	then
+        	echo "$SERVICE_NAME HAS BEEN RESTARTED & IS RUNNING"
+	fi
+fi
 
 
