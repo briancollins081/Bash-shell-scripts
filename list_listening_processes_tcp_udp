@@ -1,3 +1,37 @@
 #!/bin/bash
 
-sudo netstat -tulpn
+echo "Enter the port number for the process you want to check: "
+read PORT_FILTER
+
+# Check if port entry is a number
+REXP='^[0-9]+([.][0-9]+)?$'
+
+if ! [[ $PORT_FILTER =~ $REXP ]] 
+then
+	echo "******************************************************"
+	echo "** INVALID PORT NUMBER - PORT MUST BE NUMERIC [0-9] **"
+	echo "******************************************************\n\n"
+
+	echo "*************************************************"
+	echo "**** LISTING ALL UDP TCP LISTENING PROCESSES ****"
+	echo "*************************************************\n\n"
+	echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
+	netstat -tulpn 
+
+else	
+	echo "*************************************************"
+        echo "************** PROCESS DETAILS ARE: *************"
+        echo "*************************************************"
+	echo "Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name"
+	netstat -tulpn | grep $PORT_FILTER
+
+	PROCESS=`sudo netstat -tulpn`
+
+	if ! echo $PROCESS | grep -q $PORT_FILTER
+	then
+		echo "**************************************************"
+		echo "**** PROCESS NOT FOUND check your port number ****"	
+		echo "**************************************************"
+	fi
+fi
+	

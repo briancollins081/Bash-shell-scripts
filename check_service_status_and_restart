@@ -23,6 +23,9 @@ else
 	if systemctl status $SERVICE_NAME | grep active | grep '(running)'
 	then
         	echo "$SERVICE_NAME HAS BEEN RESTARTED & IS RUNNING"
+	else
+		echo "$SERVICE_NAME COULD NOT BE RESTARTED WITH SYSTEMCTL"
+		journalctl -f
 	fi
 fi
 
