@@ -13,7 +13,7 @@ If the service being checked is stopped, then it restarts it.
 
 Ensure you run the script with sudo rights i.e. `sudo ./check_service_status_and_restart`
 
-## Scan parent folder and remove any node_modules directory - clean disk
+## Scan parent folder and remove any node_modules directories - clean disk
 Enables you to clean old `npm` projects packages and work with only the current projects
 This is effective for users with small disk sizez.
 Run the script with sudo right i.e. `sudo ./rm-node-modules-recursevely-from-parent-folder`
