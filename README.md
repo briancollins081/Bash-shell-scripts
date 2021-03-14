@@ -1,6 +1,10 @@
 # Bash-shell-scripts
+**Feel free to contribute**
+
 Linux shell scripts - quick ref for sample tasks
+
 More of a learning - open for contribution
+
 For all scripts before running them ensure you have added execute permission by running: `sudo chmod +x script_name`
 
 ## List processes listening on ports for both udp and tcp protocols script
