@@ -1,0 +1,59 @@
+#!/bin/bash
+
+# GLOBAL VARIABLES 
+PARENT_FOLDER_PATH=''
+VERBOSE='N'
+
+# FUNCTIONS
+# Removes all node_modules folders and their content in the specified global variable PARENT_FOLDER_PATH
+remove_node_modules_verbose(){
+	find . -type d -name node_modules -prune -exec rm -rfv {} \;
+}
+
+remove_node_modules_quiet(){
+        find . -type d -name node_modules -prune -exec rm -rf {} \;
+}
+
+# Takes the users mode of deletion
+take_user_deletion_mode(){
+	echo "Would you like the verbose mode of deletion --- WARNING This mode can produce excessive output...! (Y/n):"
+	read VERBOSE
+	VERBOSE=${VERBOSE^^}
+	while [ $VERBOSE != "Y" ] && [ $VERBOSE != "N" ]
+	do
+		echo "You entered an unrecognized option"
+		echo "Would you like the verbose mode of deletion --- WARNING This can produce excessive output...! (Y/n):"
+		read VERBOSE
+		VERBOSE=${VERBOSE^^}
+	done
+}
+
+take_user_directory(){
+	echo "Enter the path to the parent folder:"
+        read PARENT_FOLDER_PATH
+
+	while ! [[ -d $PARENT_FOLDER_PATH ]]
+	do
+		echo "Sorry it seems like the folder path does not exist...!"
+		echo "Don't worry you can try again or press CTR + C to quit"
+		echo "Enter the path to parent folder:"
+		read PARENT_FOLDER_PATH
+	done
+}
+main(){
+	echo "****************************************************"
+	echo "**********WELCOME TO NODE_MODULES_REMOVER***********"
+	echo "****************************************************"
+	take_user_deletion_mode
+	take_user_directory
+	cd $PARENT_FOLDER_PATH
+	if [ $VERBOSE == "Y" ]
+	then
+		remove_node_modules_verbose
+	else
+		remove_node_modules_quiet
+	fi
+}
+
+# START SCRIPT
+main
