@@ -23,3 +23,9 @@ Enables you to clean old `npm` projects packages and work with only the current 
 This is effective for users with small disk size.
 
 Run the script with sudo right i.e. `sudo ./rm-node-modules-recursevely-from-parent-folder`
+
+## Recursively sed substitute all files in a folder and its subfolders with one command
+
+Created a recursive sed substitution script - so that you don't have to type each files command one by one
+
+Let's say you have a directory `project/charts/`. you can scan charts subfolder doing a substitution on each file within it and it's subfolders by running: `recursive-sed-substitution.sh $(pwd)/charts  string_to_search value_to_replace`
