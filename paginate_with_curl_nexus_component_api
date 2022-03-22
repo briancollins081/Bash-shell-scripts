@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# Warning: this tool is for internal use only - for Release Engineering
+# For any other use do so at your own risk!
+
+export NEXUSREPOSITORYURL=https://repo.example.com
+
+usage_error() {
+    echo ""
+    echo "Usage: paginate_with_curl_nexus_component_api NEXREPONAME NEXUSER NEXPASS COMPONENTNAME COMPONENTVERSION"
+    echo "   Ex. paginate_with_curl_nexus_component_api demorepo demo 'pass' democomponentname democomponentversion"
+    echo ""
+}
+
+if [ -z $1 ] || [ -z $2 ] || [ -z $3 ] || [ -z $4 ] || [ -z $5 ]; then
+    usage_error
+    exit 0
+else
+    export NEXREPONAME=$1
+    export NEXUSER=$2
+    export NEXPASS=$3
+    export COMPONENTNAME=$4
+    export COMPONENTVERSION=$5
+fi
+
+echo ""
+echo "Using the following values:"
+echo NEXREPONAME:$NEXREPONAME NEXUSER:$NEXUSER NEXPASS:$NEXPASS COMPONENTNAME:$COMPONENTNAME COMPONENTVERSION: $COMPONENTVERSION
+echo ""
+
+# GET Continuation token args: $1 - REQ URL
+get_continuation_token() {
+    #  export CONTINUATION_TOKEN=$(curl -u ${NEXUSER}:${NEXPASS} ${NEXUSREPOSITORYURL}/service/rest/v1/components\?repository=${NEXREPONAME} | grep continuationToken | cut -d '"' -f 4)
+    export CONTINUATION_TOKEN=$(curl -u ${NEXUSER}:${NEXPASS} ${1} | grep continuationToken | cut -d '"' -f 4)
+    echo CONTINUATION_TOKEN: $CONTINUATION_TOKEN
+}
+
+# Loop till you get value or reach the end
+search_nexus_component_id() {
+    NAME_PATTERN="\"name\" : \"$COMPONENTNAME\""
+    VER_PATTERN="\"version\" : \"$COMPONENTVERSION\""
+    # get initial request
+    export COMPONENT_ID=$(curl -u ${NEXUSER}:${NEXPASS} ${NEXUSREPOSITORYURL}/service/rest/v1/components\?repository\=${NEXREPONAME} | grep -B4 -A2 "${NAME_PATTERN}" | grep -B5 -A0 "${VER_PATTERN}" | grep "id" | cut -d ":" -f2 | cut -d '"' -f2)
+    # loop if not found
+    if [ -z $COMPONENT_ID ]; then
+        get_continuation_token ${NEXUSREPOSITORYURL}/service/rest/v1/components\?repository\=${NEXREPONAME}
+
+        while [ ! -z $CONTINUATION_TOKEN ] && [ -z $COMPONENT_ID ]; do
+            export COMPONENT_ID=$(curl -u ${NEXUSER}:${NEXPASS} ${NEXUSREPOSITORYURL}/service/rest/v1/components\?repository\=${NEXREPONAME}\&continuationToken\=${CONTINUATION_TOKEN} | grep -B4 -A2 "${NAME_PATTERN}" | grep -B5 -A0 "${VER_PATTERN}" | grep "id" | cut -d ":" -f2 | cut -d '"' -f2)
+            [ -z $COMPONENT_ID ] && get_continuation_token ${NEXUSREPOSITORYURL}/service/rest/v1/components\?repository\=${NEXREPONAME}\&continuationToken\=${CONTINUATION_TOKEN}
+        done
+    fi
+}
+
+search_nexus_component_id
+echo COMPONENT_ID: $COMPONENT_ID
+if [ -z $COMPONENT_ID ]; then
+    echo ""
+    echo "Component not found, try again or check if you passed in the right arguments"
+    echo ""
+    usage_error
+else
+    # DELETE COMPONENT
+    echo ""
+    echo "Performing delete request for component with ID: ${COMPONENT_ID}"
+    echo ""
+    curl -u ${NEXUSER}:${NEXPASS} -X DELETE "${NEXUSREPOSITORYURL}/service/rest/v1/components/${COMPONENT_ID}"
+fi
