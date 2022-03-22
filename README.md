@@ -29,3 +29,12 @@ Run the script with sudo right i.e. `sudo ./rm-node-modules-recursevely-from-par
 Created a recursive sed substitution script - so that you don't have to type each files command one by one
 
 Let's say you have a directory `project/charts/`. you can scan charts subfolder doing a substitution on each file within it and it's subfolders by running: `recursive-sed-substitution.sh $(pwd)/charts  string_to_search value_to_replace`
+
+## paginate_with_curl_nexus_component_api search and then delete component
+This script will search your nexus repo using the components api (v2) and then return the matching component id which is in turn used to delete the matched component. You may customize the delete part for your usecase.
+
+Example:
+
+Usage: paginate_with_curl_nexus_component_api NEXREPONAME NEXUSER NEXPASS COMPONENTNAME COMPONENTVERSION
+
+   Ex. paginate_with_curl_nexus_component_api demorepo demo 'pass' democomponentname democomponentversion
