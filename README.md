@@ -33,8 +33,8 @@ Let's say you have a directory `project/charts/`. you can scan charts subfolder 
 ## paginate_with_curl_nexus_component_api search and then delete component
 This script will search your nexus repo using the components api (v2) and then return the matching component id which is in turn used to delete the matched component. You may customize the delete part for your usecase.
 
-Example:
+**Example:**
 
-Usage: paginate_with_curl_nexus_component_api NEXREPONAME NEXUSER NEXPASS COMPONENTNAME COMPONENTVERSION
+**Usage:** paginate_with_curl_nexus_component_api NEXREPONAME NEXUSER NEXPASS COMPONENTNAME COMPONENTVERSION
 
-   Ex. paginate_with_curl_nexus_component_api demorepo demo 'pass' democomponentname democomponentversion
+  **Ex.** paginate_with_curl_nexus_component_api demorepo demo 'pass' democomponentname democomponentversion
