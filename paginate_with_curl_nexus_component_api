@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# Warning: this tool is for internal use only - for Release Engineering
-# For any other use do so at your own risk!
+# Warning: ONLY USE THIS IF YOU KNOW WHAT THE SCRIPT DOES
 
 export NEXUSREPOSITORYURL=https://repo.example.com
 
